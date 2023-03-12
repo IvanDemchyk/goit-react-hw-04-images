@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 import {
   SearchContainer,
   SearchForm,
@@ -8,40 +8,38 @@ import {
 } from './SearchBar.styled';
 import { ImSearch } from 'react-icons/im';
 
-export class SearchBar extends Component {
-  state = {
-    searchQuery: '',
-  };
+export const SearchBar = ({ submit }) => {
+  const [query, setQuery] = useState('');
 
-  handleSubmit = evt => {
+  const handleSubmit = evt => {
     evt.preventDefault();
-    this.props.submit(this.state.searchQuery);
-    this.setState({ searchQuery: '' });
+    submit(query);
+    setQuery('');
   };
 
-  handleChange = evt => this.setState({ searchQuery: evt.currentTarget.value });
+  const handleChange = ({ currentTarget }) => {
+    setQuery(currentTarget.value);
+  };
 
-  render() {
-    return (
-      <SearchContainer>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchButton type="submit">
-            <ImSearch size={25} />
-          </SearchButton>
+  return (
+    <SearchContainer>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchButton type="submit">
+          <ImSearch size={25} />
+        </SearchButton>
 
-          <SearchInput
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-            value={this.state.searchQuery}
-          />
-        </SearchForm>
-      </SearchContainer>
-    );
-  }
-}
+        <SearchInput
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleChange}
+          value={query}
+        />
+      </SearchForm>
+    </SearchContainer>
+  );
+};
 
 SearchBar.propTypes = {
   submit: PropTypes.func.isRequired,
